@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Pengukur Panjang — Index</title>
+  <style>
+    :root{--bg:#f7f7fb;--card:#ffffff;--accent:#0b69ff;--muted:#666}
+    *{box-sizing:border-box}
+    body{font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial; margin:0; background:var(--bg); color:#111}
+    .wrap{max-width:980px;margin:28px auto;padding:20px}
+    header{display:flex;align-items:center;gap:16px}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:6px 0 18px;color:var(--muted)}
+    .card{background:var(--card);border-radius:12px;padding:16px;box-shadow:0 6px 18px rgba(12,12,20,0.06)}
+    .controls{display:flex;gap:12px;flex-wrap:wrap;margin-top:12px}
+    .controls > *{flex:1;min-width:160px}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input[type=text], input[type=number], select{width:100%;padding:8px 10px;border-radius:8px;border:1px solid #e3e7ee}
+    button{background:var(--accent);color:#fff;padding:9px 12px;border-radius:10px;border:0;cursor:pointer}
+    #canvasWrap{margin-top:16px;border-radius:10px;overflow:hidden;background:#222;display:flex;justify-content:center;align-items:center}
+    canvas{max-width:100%;height:auto;background:#fff;display:block}
+    .info{display:flex;gap:14px;flex-wrap:wrap;margin-top:12px}
+    .info .item{background:#fbfbff;padding:10px;border-radius:8px;min-width:140px}
+    small.hint{color:var(--muted)}
+    .muted{color:var(--muted)}
+    footer{margin-top:18px;font-size:13px;color:var(--muted)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div style="width:52px;height:52px;border-radius:10px;background:linear-gradient(135deg,#0b69ff,#3bc7ff);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700">LP</div>
+      <div>
+        <h1>Pengukur Panjang (Web)</h1>
+        <p class="lead">Ukur panjang pada gambar atau kanvas. Kalibrasikan menggunakan objek referensi untuk mendapatkan ukuran sebenarnya (cm, m, inci).</p>
+      </div>
+    </header>
+
+    <div class="card">
+      <div class="controls">
+        <div>
+          <label>Unggah Gambar / Foto (opsional)</label>
+          <input id="imgInput" type="file" accept="image/*">
+        </div>
+        <div>
+          <label>Atur Unit</label>
+          <select id="unit">
+            <option value="cm">Centimeter (cm)</option>
+            <option value="mm">Millimeter (mm)</option>
+            <option value="m">Meter (m)</option>
+            <option value="in">Inch (in)</option>
+          </select>
+        </div>
+        <div>
+          <label>Kalibrasi: Panjang objek referensi (di dunia nyata)</label>
+          <input id="realLength" type="number" placeholder="Isi angka, mis. 10" step="any">
+        </div>
+        <div>
+          <label>Kalibrasi: Gambar - gambar garis referensi</label>
+          <div style="display:flex;gap:8px">
+            <button id="calBtn">Mulai kalibrasi</button>
+            <button id="clearCal">Batal</button>
+          </div>
+          <small class="hint">Klik & tarik pada gambar untuk mengukur (kalibrasikan dulu dengan objek yang diketahui panjang).</small>
+        </div>
+      </div>
+
+      <div id="canvasWrap" class="card" style="margin-top:12px;padding:12px">
+        <canvas id="cv" width="1000" height="600"></canvas>
+      </div>
+
+      <div class="info">
+        <div class="item">
+          <div class="muted">Piksel</div>
+          <div id="pixels">0 px</div>
+        </div>
+        <div class="item">
+          <div class="muted">Hasil (unit terpilih)</div>
+          <div id="result">—</div>
+        </div>
+        <div class="item">
+          <div class="muted">Skala</div>
+          <div id="scale">— (unit per px)</div>
+        </div>
+      </div>
+
+      <p style="margin-top:12px">Cara pakai singkat: <ol style="padding-left:18px;margin-top:6px"><li>Unggah foto yang ingin diukur (optional).</li><li>Jika ingin hasil nyata, gunakan <b>Kalibrasi</b>: masukkan panjang nyata objek referensi dan klik "Mulai kalibrasi" lalu gambar garis di atas objek referensi pada gambar.</li><li>Setelah kalibrasi, klik & tarik di objek yang ingin diukur. Hasil akan muncul pada panel.</li></ol></p>
+
+      <footer>Catatan: akurasi tergantung pada perspektif foto. Pastikan objek referensi & objek yang diukur berada pada bidang yang sama dan foto diambil tegak lurus.</footer>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('cv');
+    const ctx = canvas.getContext('2d');
+    const imgInput = document.getElementById('imgInput');
+    const unitSel = document.getElementById('unit');
+    const realLengthInput = document.getElementById('realLength');
+    const calBtn = document.getElementById('calBtn');
+    const clearCal = document.getElementById('clearCal');
+    const pixelsEl = document.getElementById('pixels');
+    const resultEl = document.getElementById('result');
+    const scaleEl = document.getElementById('scale');
+
+    let img = new Image();
+    let drawing = false;
+    let start = null;
+    let isCalibrating = false;
+    let scale = null; // unit per pixel
+
+    // Draw background grid + image
+    function fitCanvasToContainer(){
+      // Keep internal resolution large for accuracy; CSS scales via responsive canvas wrapper.
+      const rect = canvas.getBoundingClientRect();
+      // keep width 1000 logical px, change only displayed size via css. (already set)
+    }
+
+    function redraw(){
+      // clear
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      // draw image centered and fitted
+      if(img.src){
+        // compute fit
+        const iw = img.width, ih = img.height;
+        const cw = canvas.width, ch = canvas.height;
+        const r = Math.min(cw/iw, ch/ih);
+        const dw = iw * r; const dh = ih * r;
+        const dx = (cw - dw)/2; const dy = (ch - dh)/2;
+        ctx.drawImage(img, 0,0,iw,ih, dx,dy,dw,dh);
+      } else {
+        // empty canvas fill
+        ctx.fillStyle = '#fff';
+        ctx.fillRect(0,0,canvas.width,canvas.height);
+      }
+      // draw any current line
+      if(start && tempPoint){
+        drawLine(start,tempPoint,isCalibrating ? 'orange' : 'cyan');
+      }
+      // draw calibration line if exists
+      if(calibrationLine){
+        drawLine(calibrationLine.a, calibrationLine.b, 'orange');
+      }
+    }
+
+    function drawLine(a,b,color='cyan'){
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = color;
+      ctx.beginPath();
+      ctx.moveTo(a.x,a.y);
+      ctx.lineTo(b.x,b.y);
+      ctx.stroke();
+      // markers
+      ctx.fillStyle = color;
+      ctx.beginPath(); ctx.arc(a.x,a.y,5,0,Math.PI*2); ctx.fill();
+      ctx.beginPath(); ctx.arc(b.x,b.y,5,0,Math.PI*2); ctx.fill();
+    }
+
+    function getCanvasPoint(e){
+      const rect = canvas.getBoundingClientRect();
+      const x = (e.clientX ?? e.touches?.[0]?.clientX) - rect.left;
+      const y = (e.clientY ?? e.touches?.[0]?.clientY) - rect.top;
+      // scale to canvas coordinate system (if CSS scaled)
+      const scaleX = canvas.width / rect.width;
+      const scaleY = canvas.height / rect.height;
+      return {x: x*scaleX, y: y*scaleY};
+    }
+
+    let tempPoint = null;
+    let calibrationLine = null;
+
+    canvas.addEventListener('mousedown', (e)=>{
+      drawing = true;
+      start = getCanvasPoint(e);
+      tempPoint = start;
+    });
+    canvas.addEventListener('touchstart',(e)=>{ e.preventDefault(); drawing=true; start=getCanvasPoint(e); tempPoint=start; });
+
+    window.addEventListener('mousemove',(e)=>{
+      if(!drawing) return;
+      tempPoint = getCanvasPoint(e);
+      redraw();
+    });
+    canvas.addEventListener('touchmove',(e)=>{ e.preventDefault(); if(!drawing) return; tempPoint=getCanvasPoint(e); redraw(); });
+
+    window.addEventListener('mouseup',(e)=>{
+      if(!drawing) return;
+      drawing=false;
+      const end = getCanvasPoint(e);
+      tempPoint = end;
+      const px = Math.hypot(end.x - start.x, end.y - start.y);
+      pixelsEl.textContent = Math.round(px) + ' px';
+
+      if(isCalibrating){
+        // store calibration
+        calibrationLine = {a:start, b:end, pixels: px};
+        const real = parseFloat(realLengthInput.value);
+        if(real > 0){
+          // compute scale depending on unit
+          // scale = real_world_units / pixels
+          scale = real / px;
+          scaleEl.textContent = scale.toFixed(6) + ' ' + unitSel.value + ' / px';
+          resultEl.textContent = 'Kalibrasi tersimpan';
+        } else {
+          alert('Masukkan panjang nyata objek referensi sebelum kalibrasi.');
+          calibrationLine = null;
+        }
+        isCalibrating = false;
+        calBtn.textContent = 'Mulai kalibrasi';
+      } else {
+        // normal measurement
+        if(scale){
+          const measured = px * scale;
+          resultEl.textContent = measured.toFixed(3) + ' ' + unitSel.value;
+        } else {
+          resultEl.textContent = (px.toFixed(1) + ' px (belum dikalibrasi)');
+        }
+      }
+      redraw();
+    });
+
+    // also support touchend
+    window.addEventListener('touchend',(e)=>{
+      if(!drawing) return;
+      drawing=false;
+      const end = tempPoint;
+      if(!end) return;
+      const px = Math.hypot(end.x - start.x, end.y - start.y);
+      pixelsEl.textContent = Math.round(px) + ' px';
+
+      if(isCalibrating){
+        calibrationLine = {a:start, b:end, pixels: px};
+        const real = parseFloat(realLengthInput.value);
+        if(real > 0){ scale = real / px; scaleEl.textContent = scale.toFixed(6) + ' ' + unitSel.value + ' / px'; resultEl.textContent = 'Kalibrasi tersimpan'; }
+        else { alert('Masukkan panjang nyata objek referensi sebelum kalibrasi.'); calibrationLine=null; }
+        isCalibrating = false; calBtn.textContent='Mulai kalibrasi';
+      } else {
+        if(scale){ const measured = px * scale; resultEl.textContent = measured.toFixed(3) + ' ' + unitSel.value; } else { resultEl.textContent = (px.toFixed(1) + ' px (belum dikalibrasi)'); }
+      }
+      redraw();
+    });
+
+    calBtn.addEventListener('click',()=>{
+      const real = parseFloat(realLengthInput.value);
+      if(!real || real <= 0){ alert('Masukkan panjang nyata objek referensi (angka > 0) sebelum memulai kalibrasi.'); return; }
+      isCalibrating = true;
+      calBtn.textContent = 'Kalibrasi: klik & tarik pada objek referensi';
+      resultEl.textContent = 'Silakan gambar garis referensi pada gambar.';
+    });
+
+    clearCal.addEventListener('click', ()=>{
+      calibrationLine = null; scale = null; scaleEl.textContent = '— (unit per px)'; resultEl.textContent = 'Kalibrasi dibersihkan'; redraw();
+    });
+
+    imgInput.addEventListener('change', (e)=>{
+      const f = e.target.files[0];
+      if(!f) return;
+      const url = URL.createObjectURL(f);
+      img = new Image();
+      img.onload = ()=>{
+        // fit canvas size to image aspect keeping max dims
+        const maxW = 1200, maxH = 800;
+        let iw = img.width, ih = img.height;
+        const r = Math.min(maxW/iw, maxH/ih, 1);
+        canvas.width = Math.round(iw * r);
+        canvas.height = Math.round(ih * r);
+        redraw();
+      };
+      img.src = url;
+    });
+
+    // initial draw
+    fitCanvasToContainer();
+    redraw();
+
+    // resize handler: scale internal canvas while preserving image fit
+    window.addEventListener('resize', ()=>{ redraw(); });
+
+    // change unit label when unit changes (doesn't convert existing scale automatically)
+    unitSel.addEventListener('change', ()=>{
+      if(scale){ scaleEl.textContent = scale.toFixed(6) + ' ' + unitSel.value + ' / px'; }
+    });
+
+    // helpful: keyboard 'c' to clear
+    window.addEventListener('keydown',(e)=>{ if(e.key==='c') { calibrationLine=null; scale=null; resultEl.textContent='Dikosongkan'; scaleEl.textContent='—'; redraw(); } });
+  </script>
+</body>
+</html>
