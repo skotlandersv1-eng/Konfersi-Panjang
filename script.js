@@ -27,8 +27,7 @@ const saveBtn = document.getElementById('saveBtn');
 const themeToggle = document.getElementById('themeToggle');
 const toastEl = document.getElementById('toast');
 
-const HISTORY_KEY = 'konv_panjang_history_v3';
-const THEME_KEY = 'konv_panjang_theme_v3';
+const HISTORY_KEY = 'konv_panjang_history_v3_5';
 
 /* ===== utilities ===== */
 function toMeters(val, unit){ return Number(val) * UNITS[unit].f; }
@@ -60,7 +59,6 @@ function updateAll(){
   const v = Number(vRaw);
   const from = fromEl.value, to = toEl.value;
 
-  // main result
   if(vRaw === '' || isNaN(v)){
     resultMain.textContent = '—';
     resultSub.textContent = 'Masukkan nilai untuk melihat hasil';
@@ -152,15 +150,10 @@ clearHistoryBtn.addEventListener('click', ()=>{
   showToast('Riwayat dibersihkan');
 });
 
-/* ===== theme handling (persist) ===== */
-function loadTheme(){
-  const t = localStorage.getItem(THEME_KEY);
-  if(t === 'dark') document.documentElement.classList.add('dark'), themeToggle.setAttribute('aria-pressed','true'), themeToggle.textContent='☀️';
-  else document.documentElement.classList.remove('dark'), themeToggle.setAttribute('aria-pressed','false'), themeToggle.textContent='🌙';
-}
+/* ===== theme toggle (no persistence) ===== */
 themeToggle.addEventListener('click', ()=>{
-  const isDark = document.documentElement.classList.toggle('dark');
-  localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+  const isDark = document.documentElement.classList.toggle('dark-mode');
+  // update button icon and aria-pressed
   themeToggle.setAttribute('aria-pressed', isDark ? 'true' : 'false');
   themeToggle.textContent = isDark ? '☀️' : '🌙';
 });
@@ -168,8 +161,8 @@ themeToggle.addEventListener('click', ()=>{
 /* ===== init ===== */
 (function init(){
   populateUnits();
-  loadTheme();
-  // sensible default
+  // default: start light (no class)
+  document.documentElement.classList.remove('dark-mode');
   valueEl.value = 1;
   updateAll();
   renderHistory();
