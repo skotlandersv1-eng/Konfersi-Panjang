@@ -1,71 +1,101 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Konversi Panjang</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Konversi Panjang — Fatih & Alfian</title>
+  <meta name="description" content="Konverter panjang modern, responsif, otomatis. Dibuat oleh Fatih & Alfian." />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
 </head>
 <body>
-  <div class="container">
-    <h1>Konversi Panjang</h1>
+  <main class="wrap">
+    <section class="card mainCard" aria-labelledby="appTitle">
+      <header class="headerRow">
+        <div class="logo">KP</div>
+        <div>
+          <h1 id="appTitle">Konversi Panjang</h1>
+          <p class="subtitle">Konversi otomatis • Tabel lengkap • Mode gelap • Responsif</p>
+        </div>
+        <div class="actionsTop">
+          <button id="themeToggle" class="iconBtn" aria-pressed="false" title="Toggle theme">🌙</button>
+        </div>
+      </header>
 
-    <div class="converter-card">
-      <div class="input-section">
-        <input type="number" id="inputValue" placeholder="Masukkan nilai" />
-        <select id="inputUnit">
-          <option value="mm">Milimeter (mm)</option>
-          <option value="cm">Sentimeter (cm)</option>
-          <option value="m">Meter (m)</option>
-          <option value="km">Kilometer (km)</option>
-          <option value="inch">Inci (inch)</option>
-          <option value="ft">Kaki (ft)</option>
-          <option value="yd">Yard (yd)</option>
-          <option value="mile">Mil (mile)</option>
-        </select>
+      <form id="converterForm" class="formGrid" onsubmit="return false;" aria-label="Form konversi panjang">
+        <div class="field">
+          <label for="value">Nilai</label>
+          <input id="value" type="number" inputmode="decimal" placeholder="contoh: 12.5" step="any" />
+        </div>
+
+        <div class="field">
+          <label for="from">Dari</label>
+          <select id="from"></select>
+        </div>
+
+        <div class="field">
+          <label for="to">Ke</label>
+          <select id="to"></select>
+        </div>
+
+        <div class="field buttonsRow" style="align-self:end;">
+          <button id="swapBtn" class="btn ghost" type="button" title="Tukar dari ↔ ke">Tukar ↔</button>
+          <button id="copyBtn" class="btn" type="button" title="Salin hasil">Salin</button>
+        </div>
+      </form>
+
+      <div class="resultCard" aria-live="polite">
+        <div class="resultLeft">
+          <div class="big" id="resultMain">—</div>
+          <div class="muted" id="resultSub">Masukkan nilai untuk melihat hasil</div>
+        </div>
+        <div class="resultRight">
+          <div class="muted small">Skala</div>
+          <div id="scaleInfo" class="muted">—</div>
+          <button id="saveBtn" class="btn ghost small">Simpan</button>
+        </div>
       </div>
 
-      <div class="output-section">
-        <input type="text" id="outputValue" readonly />
-        <select id="outputUnit">
-          <option value="mm">Milimeter (mm)</option>
-          <option value="cm">Sentimeter (cm)</option>
-          <option value="m">Meter (m)</option>
-          <option value="km" selected>Kilometer (km)</option>
-          <option value="inch">Inci (inch)</option>
-          <option value="ft">Kaki (ft)</option>
-          <option value="yd">Yard (yd)</option>
-          <option value="mile">Mil (mile)</option>
-        </select>
+      <div class="bottomRow">
+        <div class="historyPanel card small" aria-label="Riwayat konversi">
+          <div class="panelHead">
+            <strong>Riwayat</strong>
+            <div>
+              <button id="clearHistory" class="btn ghost xsmall">Bersihkan</button>
+            </div>
+          </div>
+          <div id="historyList" class="historyList">
+            <div class="muted">Belum ada riwayat</div>
+          </div>
+        </div>
+
+        <div class="tablePanel card small" aria-label="Tabel konversi">
+          <div class="panelHead">
+            <strong>Tabel Hasil</strong>
+            <div>
+              <button id="copyAll" class="btn ghost xsmall">Salin Semua</button>
+            </div>
+          </div>
+          <div class="tableWrap">
+            <table id="convTable" class="convTable">
+              <thead>
+                <tr><th>Satuan</th><th style="text-align:right">Nilai</th><th></th></tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+          </div>
+        </div>
       </div>
 
-      <div class="button-section">
-        <button id="swapBtn">Tukar</button>
-        <button id="copyBtn">Salin Hasil</button>
-      </div>
-    </div>
+      <footer class="cardFooter">
+        © 2025 Konverter Panjang • Dibuat oleh <strong>Fatih</strong> & <strong>Alfian</strong> 💡
+      </footer>
+    </section>
+  </main>
 
-    <div class="table-section">
-      <h2>Hasil Konversi Lengkap</h2>
-      <table id="resultTable">
-        <thead>
-          <tr>
-            <th>Satuan</th>
-            <th>Nilai</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      </table>
-    </div>
-
-    <div class="toggle-section">
-      <button id="themeToggle">🌙 Mode Gelap</button>
-    </div>
-
-    <footer>
-      © 2025 Konverter Panjang • Dibuat oleh <strong>Fatih</strong> dan <strong>Alfian</strong>
-    </footer>
-  </div>
+  <div id="toast" aria-hidden="true"></div>
 
   <script src="script.js"></script>
 </body>
