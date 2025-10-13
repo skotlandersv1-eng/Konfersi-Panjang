@@ -1,4 +1,3 @@
-// ======== Konversi Panjang ========
 function convert() {
   const val = parseFloat(valueInput.value);
   const from = fromSelect.value;
@@ -8,12 +7,13 @@ function convert() {
 
   const meters = val * rates[from];
   const result = meters / rates[to];
-  const formatted = parseFloat(result.toPrecision(6));
+  const formatted = parseFloat(result.toFixed(6));
+  const cleaned = Number(formatted.toString());
 
-  resultValue.textContent = `${formatted} ${to}`;
+  resultValue.textContent = `${cleaned} ${to}`;
   resultDesc.textContent = `${toSelect.options[toSelect.selectedIndex].text} — dari ${val} ${fromSelect.options[fromSelect.selectedIndex].text}`;
 
-  addHistory(`${val} ${from} → ${formatted} ${to}`);
+  addHistory(`${val} ${from} → ${cleaned} ${to}`);
   fillTable(meters);
 }
 
@@ -22,13 +22,14 @@ function fillTable(meters) {
   Object.entries(rates).forEach(([unit, val]) => {
     const res = meters / val;
     const row = document.createElement("tr");
+    const cleaned = Number(parseFloat(res.toFixed(6)).toString());
     row.innerHTML = `
       <td>${unit}</td>
-      <td>${parseFloat(res.toPrecision(6))}</td>
+      <td>${cleaned}</td>
       <td><button class="copy-btn-small">Salin</button></td>
     `;
     row.querySelector(".copy-btn-small").addEventListener("click", () => {
-      navigator.clipboard.writeText(parseFloat(res.toPrecision(6)));
+      navigator.clipboard.writeText(cleaned);
     });
     tableBody.appendChild(row);
   });
