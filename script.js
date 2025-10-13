@@ -17,7 +17,7 @@ const conversionRates = {
   inch: 0.0254,
   ft: 0.3048,
   yd: 0.9144,
-  mile: 1609.34
+  mile: 1609.34,
 };
 
 // ===== Fungsi Konversi =====
@@ -35,13 +35,14 @@ function updateConversion() {
   const to = outputUnit.value;
   const result = convertLength(value, from, to);
 
-  outputValue.value = result.toFixed(4);
+  outputValue.value = result ? result.toFixed(4) : "";
   updateTable(value, from);
 }
 
 // ===== Tabel Otomatis Semua Konversi =====
 function updateTable(value, fromUnit) {
   tableBody.innerHTML = "";
+  if (!value || isNaN(value)) return;
   for (let unit in conversionRates) {
     const converted = convertLength(value, fromUnit, unit);
     const row = document.createElement("tr");
@@ -71,8 +72,9 @@ copyBtn.addEventListener("click", () => {
 // ===== Dark Mode =====
 themeToggle.addEventListener("click", () => {
   document.body.classList.toggle("dark");
-  themeToggle.textContent =
-    document.body.classList.contains("dark") ? "☀️ Mode Terang" : "🌙 Mode Gelap";
+  themeToggle.textContent = document.body.classList.contains("dark")
+    ? "☀️ Mode Terang"
+    : "🌙 Mode Gelap";
 });
 
 // ===== Auto Update Saat Input =====
@@ -81,4 +83,5 @@ inputUnit.addEventListener("change", updateConversion);
 outputUnit.addEventListener("change", updateConversion);
 
 // ===== Inisialisasi Awal =====
+inputValue.value = 1;
 updateConversion();
