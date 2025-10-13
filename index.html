@@ -1,70 +1,60 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Konversi Panjang</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header>
-    <h1>Konversi Panjang</h1>
-    <button id="theme-toggle">☀️</button>
+    <div class="header-inner">
+      <div class="logo">KP</div>
+      <div class="title-group">
+        <h1>Konversi Panjang</h1>
+        <p class="subtitle">Konversi otomatis • Tabel lengkap • Mode gelap • Responsif</p>
+      </div>
+      <button id="theme-toggle" class="theme-btn" aria-pressed="false" title="Ganti mode">🌙</button>
+    </div>
   </header>
 
   <main class="container">
     <section class="card">
-      <label>Nilai:</label>
+      <label for="value">Nilai</label>
       <input type="number" id="value" placeholder="Masukkan angka" />
 
       <div class="selectors">
-        <div>
-          <label>Dari:</label>
-          <select id="from">
-            <option value="km">Kilometer</option>
-            <option value="m" selected>Meter</option>
-            <option value="cm">Centimeter</option>
-            <option value="mm">Milimeter</option>
-            <option value="in">Inci</option>
-            <option value="ft">Kaki</option>
-            <option value="yd">Yard</option>
-            <option value="mi">Mil</option>
-          </select>
+        <div class="sel">
+          <label for="from">Dari</label>
+          <select id="from"></select>
         </div>
 
-        <button id="swap-btn">⇄</button>
-
-        <div>
-          <label>Ke:</label>
-          <select id="to">
-            <option value="km">Kilometer</option>
-            <option value="m">Meter</option>
-            <option value="cm">Centimeter</option>
-            <option value="mm" selected>Milimeter</option>
-            <option value="in">Inci</option>
-            <option value="ft">Kaki</option>
-            <option value="yd">Yard</option>
-            <option value="mi">Mil</option>
-          </select>
+        <div class="swap-wrap">
+          <button id="swap-btn" type="button" title="Tukar">⇄</button>
         </div>
+
+        <div class="sel">
+          <label for="to">Ke</label>
+          <select id="to"></select>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button id="copy-btn" type="button">Salin Hasil</button>
+        <button id="copy-all" type="button">Salin Semua</button>
+        <button id="clear-history" type="button">Hapus Riwayat</button>
       </div>
 
       <div class="result">
         <h2 id="result-value">–</h2>
         <p id="result-desc">Masukkan nilai untuk konversi</p>
       </div>
-
-      <div class="actions">
-        <button id="copy-btn">Salin Hasil</button>
-        <button id="copy-all">Salin Semua</button>
-        <button id="clear-history">Hapus Riwayat</button>
-      </div>
     </section>
 
     <section class="card">
-      <h3>Hasil Konversi Lengkap</h3>
+      <h3>Tabel Hasil</h3>
       <div class="table-container">
-        <table id="conversion-table">
+        <table id="conversion-table" aria-label="Tabel konversi">
           <thead>
             <tr><th>Satuan</th><th>Nilai</th><th></th></tr>
           </thead>
