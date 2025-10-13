@@ -1,102 +1,88 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Konversi Panjang — Fatih & Alfian</title>
-  <meta name="description" content="Konverter panjang modern, responsif, otomatis. Dibuat oleh Fatih & Alfian." />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css" />
-  <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Konversi Panjang</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <main class="wrap">
-    <section class="card mainCard" aria-labelledby="appTitle">
-      <header class="headerRow">
-        <div class="logo" aria-hidden="true">KP</div>
-        <div>
-          <h1 id="appTitle">Konversi Panjang</h1>
-          <p class="subtitle">Konversi otomatis • Tabel lengkap • Mode gelap • Responsif</p>
-        </div>
-        <div class="actionsTop">
-          <!-- theme toggle: starts in light mode (no persistence) -->
-          <button id="themeToggle" class="iconBtn" aria-pressed="false" title="Toggle theme">🌙</button>
-        </div>
-      </header>
+  <div class="container">
+    <header>
+      <div class="logo">KP</div>
+      <div class="title-group">
+        <h1>Konversi Panjang</h1>
+        <p>Konversi otomatis • Tabel lengkap • Mode gelap • Responsif</p>
+      </div>
+      <button id="theme-toggle" class="theme-btn" title="Ganti mode">🌙</button>
+    </header>
 
-      <form id="converterForm" class="formGrid" onsubmit="return false;" aria-label="Form konversi panjang">
-        <div class="field">
-          <label for="value">Nilai</label>
-          <input id="value" type="number" inputmode="decimal" placeholder="contoh: 12.5" step="any" />
+    <main>
+      <div class="input-section">
+        <label for="value">Nilai</label>
+        <input type="number" id="value" value="1">
+
+        <div class="unit-row">
+          <div>
+            <label for="from">Dari</label>
+            <select id="from">
+              <option value="m">Meter (m)</option>
+              <option value="cm">Centimeter (cm)</option>
+              <option value="mm">Millimeter (mm)</option>
+              <option value="km">Kilometer (km)</option>
+              <option value="in">Inch (in)</option>
+              <option value="ft">Feet (ft)</option>
+              <option value="yd">Yard (yd)</option>
+              <option value="mi">Mil (mi)</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="to">Ke</label>
+            <select id="to">
+              <option value="cm">Centimeter (cm)</option>
+              <option value="m">Meter (m)</option>
+              <option value="mm">Millimeter (mm)</option>
+              <option value="km">Kilometer (km)</option>
+              <option value="in">Inch (in)</option>
+              <option value="ft">Feet (ft)</option>
+              <option value="yd">Yard (yd)</option>
+              <option value="mi">Mil (mi)</option>
+            </select>
+          </div>
         </div>
 
-        <div class="field">
-          <label for="from">Dari</label>
-          <select id="from"></select>
+        <div class="btn-row">
+          <button id="swap-btn">Tukar ↔</button>
+          <button id="copy-btn">Salin</button>
         </div>
 
-        <div class="field">
-          <label for="to">Ke</label>
-          <select id="to"></select>
-        </div>
-
-        <div class="field buttonsRow" style="align-self:end;">
-          <button id="swapBtn" class="btn ghost" type="button" title="Tukar dari ↔ ke">Tukar ↔</button>
-          <button id="copyBtn" class="btn" type="button" title="Salin hasil">Salin</button>
-        </div>
-      </form>
-
-      <div class="resultCard" aria-live="polite">
-        <div class="resultLeft">
-          <div class="big" id="resultMain">—</div>
-          <div class="muted" id="resultSub">Masukkan nilai untuk melihat hasil</div>
-        </div>
-        <div class="resultRight">
-          <div class="muted small">Skala</div>
-          <div id="scaleInfo" class="muted">—</div>
-          <button id="saveBtn" class="btn ghost small">Simpan</button>
+        <div class="result">
+          <h2 id="result-value">100 cm</h2>
+          <p id="result-desc">Centimeter (cm) — dari 1 Meter (m)</p>
         </div>
       </div>
 
-      <div class="bottomRow">
-        <div class="historyPanel card small" aria-label="Riwayat konversi">
-          <div class="panelHead">
-            <strong>Riwayat</strong>
-            <div>
-              <button id="clearHistory" class="btn ghost xsmall">Bersihkan</button>
-            </div>
-          </div>
-          <div id="historyList" class="historyList">
-            <div class="muted">Belum ada riwayat</div>
-          </div>
+      <div class="info-row">
+        <div class="history">
+          <h3>Riwayat</h3>
+          <button id="clear-history">Bersihkan</button>
+          <ul id="history-list"><li>Belum ada riwayat</li></ul>
         </div>
 
-        <div class="tablePanel card small" aria-label="Tabel konversi">
-          <div class="panelHead">
-            <strong>Tabel Hasil</strong>
-            <div>
-              <button id="copyAll" class="btn ghost xsmall">Salin Semua</button>
-            </div>
-          </div>
-          <div class="tableWrap">
-            <table id="convTable" class="convTable">
-              <thead>
-                <tr><th>Satuan</th><th style="text-align:right">Nilai</th><th></th></tr>
-              </thead>
-              <tbody></tbody>
-            </table>
-          </div>
+        <div class="table-container">
+          <h3>Tabel Hasil</h3>
+          <button id="copy-all">Salin Semua</button>
+          <table id="conversion-table">
+            <thead>
+              <tr><th>Satuan</th><th>Nilai</th><th>Aksi</th></tr>
+            </thead>
+            <tbody></tbody>
+          </table>
         </div>
       </div>
-
-      <footer class="cardFooter">
-        © 2025 Konverter Panjang • Dibuat oleh <strong>Fatih</strong> & <strong>Alfian</strong> 💡
-      </footer>
-    </section>
-  </main>
-
-  <div id="toast" aria-hidden="true"></div>
+    </main>
+  </div>
 
   <script src="script.js"></script>
 </body>
