@@ -1,185 +1,174 @@
-/* -------------------------------
-   🌗 Konverter Panjang v3 - Style.css
-   Modern, maskulin, dengan dark mode
------------------------------------ */
-
+/* ====== GLOBAL STYLES ====== */
 :root {
-  --primary: #2563eb;
-  --primary-hover: #1d4ed8;
-  --accent: #3b82f6;
-  --text-main: #0f172a;
-  --text-muted: #475569;
-  --bg: #f8fafc;
-  --card-bg: #ffffff;
-  --shadow: rgba(0, 0, 0, 0.08);
-}
-
-/* 🌙 Mode Gelap */
-[data-theme="dark"] {
   --primary: #3b82f6;
-  --primary-hover: #60a5fa;
-  --accent: #60a5fa;
-  --text-main: #e2e8f0;
-  --text-muted: #94a3b8;
-  --bg: #1b1f2a;
-  --card-bg: #262b38;
-  --shadow: rgba(0, 0, 0, 0.4);
+  --primary-dark: #1e40af;
+  --background: #f9fafb;
+  --text: #0f172a;
+  --card-bg: #ffffff;
+  --input-bg: #f1f5f9;
+  --border: #e2e8f0;
+  --shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  --transition: 0.3s ease;
 }
 
-/* Transisi lembut antar mode */
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+/* Mode Gelap (gaya v2, elegan lembut) */
+body.dark-mode {
+  --background: #1e293b;
+  --text: #f8fafc;
+  --card-bg: #273449;
+  --input-bg: #334155;
+  --border: #475569;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
+/* ====== BASE ====== */
 body {
-  font-family: "Poppins", sans-serif;
-  background-color: var(--bg);
-  color: var(--text-main);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
   margin: 0;
+  font-family: 'Inter', sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  transition: background-color var(--transition), color var(--transition);
 }
 
 .container {
-  background-color: var(--card-bg);
-  border-radius: 1.2rem;
-  box-shadow: 0 4px 16px var(--shadow);
-  padding: 2rem;
-  max-width: 700px;
-  width: 90%;
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 20px;
 }
 
-.header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.6rem;
-}
-
-.logo-icon {
-  background: var(--accent);
-  color: #fff;
-  font-weight: 600;
-  border-radius: 0.6rem;
-  padding: 0.8rem;
-  font-size: 1.1rem;
+/* ====== HEADER ====== */
+header {
+  text-align: center;
+  margin-bottom: 30px;
 }
 
 h1 {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: var(--text-main);
-  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-dark);
+  transition: color var(--transition);
 }
 
-.desc {
-  font-size: 0.9rem;
-  color: var(--text-muted);
+body.dark-mode h1 {
+  color: #93c5fd;
 }
 
-.theme-toggle {
-  background: none;
-  border: none;
-  font-size: 1.4rem;
-  cursor: pointer;
-  color: var(--text-muted);
-  transition: color 0.2s;
-}
-.theme-toggle:hover {
-  color: var(--primary);
+/* ====== CARD ====== */
+.card {
+  background: var(--card-bg);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+  padding: 20px;
+  transition: background var(--transition), box-shadow var(--transition);
 }
 
-.input-section {
-  margin-top: 1.5rem;
-}
-
+/* ====== INPUTS & BUTTONS ====== */
 label {
-  display: block;
-  margin-bottom: 0.3rem;
-  color: var(--text-muted);
-  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 input,
 select {
   width: 100%;
-  padding: 0.7rem;
-  font-size: 1rem;
-  border: 1px solid #cbd5e1;
-  border-radius: 0.6rem;
-  background-color: var(--card-bg);
-  color: var(--text-main);
+  padding: 10px;
+  margin: 8px 0 16px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: var(--input-bg);
+  color: var(--text);
+  transition: background var(--transition), color var(--transition);
 }
 
 button {
-  border: none;
-  padding: 0.7rem 1.2rem;
-  border-radius: 0.6rem;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 1rem;
-}
-
-.btn-primary {
-  background-color: var(--primary);
-  color: #fff;
-}
-.btn-primary:hover {
-  background-color: var(--primary-hover);
-}
-
-.output-section {
-  margin-top: 1.8rem;
-  background: var(--card-bg);
-  border-radius: 0.8rem;
-  padding: 1rem;
-  box-shadow: 0 2px 8px var(--shadow);
-}
-
-.output-section h2 {
-  margin-top: 0;
-  font-size: 1.1rem;
-  color: var(--text-main);
-}
-
-table {
   width: 100%;
-  border-collapse: collapse;
-  margin-top: 1rem;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  background: var(--primary);
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background var(--transition), transform var(--transition);
 }
 
-th,
-td {
-  padding: 0.8rem;
+button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* ====== RESULT TABLE ====== */
+.result {
+  margin-top: 20px;
+  border-collapse: collapse;
+  width: 100%;
+  background: var(--card-bg);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.result th, .result td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.result th {
+  background: var(--primary);
+  color: white;
   text-align: left;
 }
 
-th {
-  background: var(--primary);
-  color: #fff;
-  border-radius: 0.4rem 0.4rem 0 0;
+.result td {
+  transition: color var(--transition);
 }
 
-td {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-  color: var(--text-main);
+/* ====== DARK MODE BUTTON ====== */
+#toggleDarkMode {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background: var(--card-bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition: background var(--transition), color var(--transition);
 }
 
+#toggleDarkMode:hover {
+  background: var(--input-bg);
+}
+
+/* ====== FOOTER ====== */
 footer {
   text-align: center;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  margin-top: 2rem;
+  margin-top: 40px;
+  font-size: 0.9rem;
+  opacity: 0.8;
 }
 
-footer span {
-  font-weight: 600;
-  color: var(--primary);
+/* ====== RESPONSIVE ====== */
+@media (max-width: 600px) {
+  .container {
+    margin: 20px;
+  }
+  
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  button {
+    font-size: 0.95rem;
+  }
+
+  #toggleDarkMode {
+    width: 40px;
+    height: 40px;
+  }
 }
