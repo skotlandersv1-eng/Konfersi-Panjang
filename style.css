@@ -24,7 +24,18 @@ input, select{width:100%;padding:10px;border-radius:8px;border:1px solid #dbe9ff
 .swap-wrap{display:flex;align-items:center}
 #swap-btn{padding:8px 12px;border-radius:8px;background:var(--accent);color:#fff;border:0;cursor:pointer}
 .actions{display:flex;gap:10px;margin-bottom:12px;flex-wrap:wrap}
+
+/* KODE BARU/MODIFIKASI */
+/* Mengatur tombol Terapkan agar selalu di paling kiri dan menonjol */
+.actions .apply-btn-custom {
+  order: -1; /* memastikan tombol ini muncul pertama */
+  background: #3bc7ff; /* warna sedikit berbeda dari accent utama */
+  font-weight: 600;
+}
+/* Memastikan semua tombol actions mendapat gaya dasar yang sama */
 .actions button{flex:1;min-width:120px;padding:10px;border-radius:8px;border:0;background:var(--accent);color:#fff;cursor:pointer}
+/* END KODE BARU/MODIFIKASI */
+
 .result{margin-top:8px}
 .result h2{font-size:1.4rem;margin-bottom:6px}
 .table-container{overflow:auto}
@@ -43,4 +54,8 @@ body.dark-mode .card{background:var(--card); border-color:var(--border); box-sha
 body.dark-mode input, body.dark-mode select{background:#15181d;border:1px solid #30363d;color:var(--text)}
 body.dark-mode th{background:#238636}
 body.dark-mode .theme-btn{background:#15181d;color:var(--text)}
+/* Menyesuaikan tombol apply dalam mode gelap */
+body.dark-mode .apply-btn-custom {
+    background: #57a0ff; 
+}
 @media (max-width:720px){ .selectors{flex-direction:column;align-items:stretch} .actions{flex-direction:column} }
